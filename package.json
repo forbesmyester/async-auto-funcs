@@ -1,0 +1,29 @@
+{
+  "name": "async-auto-funcs",
+  "version": "0.9.0",
+  "description": "AsyncAutoPromise: Helper functions and one wrapper for the awesome `async.auto`",
+  "scripts": {
+    "test": "tslint src/**/*.ts test/**/*.ts && tsc && ava ./dest/test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:forbesmyester/async-auto-funcs"
+  },
+  "author": "Matthew Forrester <github.com@speechmarks.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/forbesmyester/async-auto-funcs/issues"
+  },
+  "main": "./dest/src/index.js",
+  "homepage": "https://github.com/forbesmyester/async-auto-funcs",
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "source-map-support": "^0.4.2",
+    "tslint": "^3.10.2",
+    "typescript": "^1.8.10",
+    "typings": "^0.8.1"
+  },
+  "dependencies": {
+    "async": "^2.0.1"
+  }
+}
