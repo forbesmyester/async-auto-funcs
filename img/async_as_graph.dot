@@ -1,0 +1,7 @@
+digraph async_as_graph {
+  send_order_email -> get_data;
+  send_order_email -> make_folder;
+  get_data -> write_file;
+  make_folder -> write_file;
+  write_file -> email_link -> log_results;
+}

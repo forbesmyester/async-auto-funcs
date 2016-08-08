@@ -1,4 +1,4 @@
-import { objectParamsToParams, makeAsyncAutoTaskFunc, makeAsyncAutoTaskFuncP, makeAsyncAutoHandlerFunc, promiseToCallback, asyncAutoPromise } from '../src/index';
+import { objectParamsToParams, makeAsyncAutoTaskFunc, makeAsyncAutoTaskSpec, makeAsyncAutoTaskSpecP, makeAsyncAutoHandlerFunc, promiseToCallback, asyncAutoPromise } from '../src/index';
 import * as async from 'async';
 import test from 'ava';
 
@@ -28,8 +28,8 @@ test('objectParamsToParams can flatten an object', function(t) {
     );
 });
 
-test.cb('makeAsyncAutoTaskFunc returns function for async.auto', (t) => {
-    let ar = makeAsyncAutoTaskFunc(
+test.cb('makeAsyncAutoTaskSpec returns function for async.auto', (t) => {
+    let ar = makeAsyncAutoTaskSpec(
         ['a', 'b'],
         function readFiles(aFile, bFile, next) {
             t.is(aFile, 'x');
@@ -115,18 +115,18 @@ test.cb('async.auto full test', (t) => {
     async.auto(
         {
             a: (next) => { next(null, 1); },
-            b: makeAsyncAutoTaskFunc(['a'], (a, next) => {
+            b: makeAsyncAutoTaskSpec(['a'], (a, next) => {
                 next(null, a + 1);
             }),
-            c: makeAsyncAutoTaskFunc(['b'], promiseToCallback((b) => {
+            c: makeAsyncAutoTaskSpec(['b'], promiseToCallback((b) => {
                 return new Promise((resolve) => {
                     resolve(b + 2);
                 });
             })),
-            d: makeAsyncAutoTaskFunc(['c'], promiseToCallback((c) => {
+            d: makeAsyncAutoTaskSpec(['c'], promiseToCallback((c) => {
                 return c + 4;
             })),
-            e: makeAsyncAutoTaskFuncP(['c', 'd'], (c, d) => {
+            e: makeAsyncAutoTaskSpecP(['c', 'd'], (c, d) => {
                 return c + d;
             })
         },
@@ -145,18 +145,18 @@ test('asyncAutoPromise full success test', (t) => {
 
     let autoStruct = {
             a: (next) => { next(null, 1); },
-            b: makeAsyncAutoTaskFunc(['a'], (a, next) => {
+            b: makeAsyncAutoTaskSpec(['a'], (a, next) => {
                 next(null, a + 1);
             }),
-            c: makeAsyncAutoTaskFunc(['b'], promiseToCallback((b) => {
+            c: makeAsyncAutoTaskSpec(['b'], promiseToCallback((b) => {
                 return new Promise((resolve) => {
                     resolve(b + 2);
                 });
             })),
-            d: makeAsyncAutoTaskFunc(['c'], promiseToCallback((c) => {
+            d: makeAsyncAutoTaskSpec(['c'], promiseToCallback((c) => {
                 return c + 4;
             })),
-            e: makeAsyncAutoTaskFuncP(['c', 'd'], (c, d) => {
+            e: makeAsyncAutoTaskSpecP(['c', 'd'], (c, d) => {
                 return c + d;
             })
         };
@@ -174,6 +174,30 @@ test('asyncAutoPromise full success test', (t) => {
                 t.fail();
             }),
     ]).then((ar) => { }); // bit wierd the final `.then()` needing to be here...
+});
+
+test('asyncAutoPromise function test', (t) => {
+
+    return Promise.all([
+        asyncAutoPromise(
+            { a: (next) => { next(null, 4); }, },
+            9,
+            function(ob) { return ob.a; }
+        ).then(function(a) {
+            t.is(a, 4);
+        }).catch((e: Error) => {
+            t.fail();
+        }),
+        asyncAutoPromise(
+            { a: (next) => { next(null, 4); }, },
+            function(ob) { return ob.a + 1; }
+        ).then(function(a) {
+            t.is(a, 5);
+        }).catch((e: Error) => {
+            t.fail();
+        })
+    ]).then((ar) => { }); // bit wierd the final `.then()` needing to be here...
+
 });
 
 test('asyncAutoPromise failure test', (t) => {
