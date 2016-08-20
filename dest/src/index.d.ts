@@ -1,4 +1,3 @@
-/// <reference path="../../typings/main.d.ts" />
 /**
  * Returns an array of the items in `ob` whose keys are in `ar`.
  */
