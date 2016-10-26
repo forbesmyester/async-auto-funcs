@@ -1,6 +1,6 @@
 {
   "name": "async-auto-funcs",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "async-auto-funcs: Helper functions and one wrapper for the awesome `async.auto`",
   "scripts": {
     "test": "tslint src/**/*.ts test/**/*.ts && tsc && ava ./dest/test/index.js",

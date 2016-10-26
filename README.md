@@ -54,14 +54,14 @@ I sometimes want to be able to write and use functions that returned promises in
 
 This repository contains a few functions to compliment `async.auto` to smooth out the things I highlighted above.
 
-### makeAsyncAutoTaskFunc / makeAsyncAutoTaskFuncP
+### makeAsyncAutoTaskSpec / makeAsyncAutoTaskSpecP
 
-The function `makeAsyncAutoTaskFunc` and it's Promise powered variant `makeAsyncAutoTaskFuncP` wrap the task functions in `async.auto` for the purpose of working with normal parameters.
+The function `makeAsyncAutoTaskSpec` and it's Promise powered variant `makeAsyncAutoTaskSpecP` wrap the task functions in `async.auto` for the purpose of working with normal parameters.
 
 You can now write:
 
 ```javascript
-var makeAsyncAutoTaskFunc = require('async-auto-funcs').makeAsyncAutoTaskFunc;
+var makeAsyncAutoTaskSpec = require('async-auto-funcs').makeAsyncAutoTaskSpec;
 
 function writeFile(data, folder, callback) {
     var fs = require('fs'),
@@ -74,7 +74,7 @@ function writeFile(data, folder, callback) {
 
 async.auto({
     ...
-    write_file: makeAsyncAutoTaskFunc(
+    write_file: makeAsyncAutoTaskSpec(
         ['get_data', 'make_folder'],
         writeFile
     ),
@@ -85,7 +85,7 @@ async.auto({
 or:
 
 ```javascript
-var makeAsyncAutoTaskFuncP = require('async-auto-funcs').makeAsyncAutoTaskFuncP;
+var makeAsyncAutoTaskSpecP = require('async-auto-funcs').makeAsyncAutoTaskSpecP;
 
 function writeFileP(data, folder) {
     var fsp = require('fs-promise'),
@@ -99,7 +99,7 @@ function writeFileP(data, folder) {
 
 async.auto({
     ...
-    write_file: makeAsyncAutoTaskFuncP(
+    write_file: makeAsyncAutoTaskSpecP(
         ['get_data', 'make_folder'],
         writeFileP
     ),
@@ -109,7 +109,7 @@ async.auto({
 
 ### makeAsyncAutoHandlerFunc
 
-This is similar to `makeAsyncAutoTaskFunc` but is for the callback at the end of `async.auto`. It works like to this:
+This is similar to `makeAsyncAutoTaskSpec` but is for the callback at the end of `async.auto`. It works like to this:
 
 ```javascript
 var makeAsyncAutoHandlerFunc = require('async-auto-funcs').makeAsyncAutoHandlerFunc;
@@ -117,8 +117,8 @@ var makeAsyncAutoHandlerFunc = require('async-auto-funcs').makeAsyncAutoHandlerF
 async.auto(
     {
         ...
-        write_file: makeAsyncAutoTaskFunc(['get_data', 'make_folder'], () => { ... }),
-        email_link: makeAsyncAutoTaskFunc(['write_file'], () => { ... }),
+        write_file: makeAsyncAutoTaskSpec(['get_data', 'make_folder'], () => { ... }),
+        email_link: makeAsyncAutoTaskSpec(['write_file'], () => { ... }),
         ...
     },
     makeAsyncAutoHandlerFunc(
@@ -135,7 +135,7 @@ async.auto(
 If you are:
 
  1. writing Promise based code in general.
- 2. Your `async.auto` tasks use the `makeAsyncAutoTaskFuncP` which are Promise based too.
+ 2. Your `async.auto` tasks use the `makeAsyncAutoTaskSpecP` which are Promise based too.
  
 Then you find it a bit inconsistent that `async.auto` uses a final callback, which kind of breaks your happy Promise based world.
 
@@ -147,8 +147,8 @@ var asyncAutoPromise = require('async-auto-funcs').asyncAutoPromise;
 asyncAutoPromise(
     {
         ...
-        write_file: makeAsyncAutoTaskFuncP(['get_data', 'make_folder'], () => {}),
-        email_link: makeAsyncAutoTaskFuncP(['write_file'], () => {}),
+        write_file: makeAsyncAutoTaskSpecP(['get_data', 'make_folder'], () => {}),
+        email_link: makeAsyncAutoTaskSpecP(['write_file'], () => {}),
         ...
     },
     'email_link'
@@ -165,8 +165,8 @@ var asyncAutoPromise = require('async-auto-funcs').asyncAutoPromise;
 asyncAutoPromise(
     {
         ...
-        write_file: makeAsyncAutoTaskFuncP(['get_data', 'make_folder'], () => {}),
-        email_link: makeAsyncAutoTaskFuncP(['write_file'], () => {}),
+        write_file: makeAsyncAutoTaskSpecP(['get_data', 'make_folder'], () => {}),
+        email_link: makeAsyncAutoTaskSpecP(['write_file'], () => {}),
         ...
     },
     function(allResults) {

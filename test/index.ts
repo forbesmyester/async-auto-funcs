@@ -127,7 +127,9 @@ test.cb('async.auto full test', (t) => {
                 return c + 4;
             })),
             e: makeAsyncAutoTaskSpecP(['c', 'd'], (c, d) => {
-                return c + d;
+                return new Promise((resolve) => {
+                    resolve(c + d);
+                });
             })
         },
         9,
